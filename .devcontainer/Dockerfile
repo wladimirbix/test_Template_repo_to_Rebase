@@ -17,16 +17,22 @@ ENV PYTHONDONTWRITEBYTECODE=1
 
 ENV PYTHONUNBUFFERED=1
  
-# Install the xz-utils package
-RUN apt-get update && apt-get install -y xz-utils
+# Install the git package
+RUN apt-get update && apt-get install -y git
+
 
 #set working directory
 WORKDIR /app
 
+
+#install requirements
+#RUN uv pip install ruff pytest databricks-connect pandas dbt-core dbt-databricks
+RUN uv --version
+
 #install dependencies
-#COPY ./requirements.txt /app
-# # RUN pip install --no-cache-dir --upgrade -r requirements.txt
+#COPY ./requirements.txt ./
+#RUN uv pip install --no-cache-dir --upgrade -r requirements.txt
 
 # #copy the scripts to the folder
 COPY . /app
-RUN uv sync --frozen
+#RUN uv sync --frozen
