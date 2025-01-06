@@ -28,4 +28,5 @@ WORKDIR /app
 # # RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
 # #copy the scripts to the folder
-# COPY . /app
+COPY . /app
+RUN uv sync --frozen
