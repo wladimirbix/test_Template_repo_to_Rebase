@@ -13,12 +13,14 @@
         "ms-vscode.azure-repos",
         "GitHub.copilot",
         "databricks.databricks",
+        "ms-azuretools.vscode-docker",
         "pomdtr.excalidraw-editor",
         "waderyan.gitblame",
         "mhutchie.git-graph",
         "ms-python.python",
         "mechatroner.rainbow-csv",
         "mutantdino.resourcemonitor"
+        
     ]
     }
   }
