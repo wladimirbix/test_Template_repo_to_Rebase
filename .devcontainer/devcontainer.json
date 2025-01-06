@@ -4,5 +4,22 @@
         // Path is relative to the devcontainer.json file.
         "dockerfile": "Dockerfile",
         "context": "."
+    },
+    
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-azuretools.vscode-azurefunctions",
+        "ms-vscode.azure-repos",
+        "GitHub.copilot",
+        "databricks.databricks",
+        "pomdtr.excalidraw-editor",
+        "waderyan.gitblame",
+        "mhutchie.git-graph",
+        "ms-python.python",
+        "mechatroner.rainbow-csv",
+        "mutantdino.resourcemonitor"
+    ]
     }
+  }
 }
