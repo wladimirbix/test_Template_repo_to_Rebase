@@ -1,10 +1,12 @@
 # Use a Python image with uv pre-installed
-FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
+FROM ghcr.io/astral-sh/uv:python3.12-slim
 
 #set working directory
 WORKDIR /app
 
+
 RUN uv pip compile pyproject.toml -o requirements.txt
+
 
 # Enable bytecode compilation
 ENV UV_COMPILE_BYTECODE=1
