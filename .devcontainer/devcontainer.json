@@ -1,5 +1,5 @@
 {
-    "name":"vsc_dev_env",
+    "name":"vsc_development_environment_devcontainer",
     "build": {
         // Path is relative to the devcontainer.json file.
         "dockerfile": "Dockerfile",
