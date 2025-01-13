@@ -17,14 +17,19 @@
                 "mhutchie.git-graph",
                 "ms-python.python",
                 "mechatroner.rainbow-csv",
-                "mutantdino.resourcemonitor"
+                "mutantdino.resourcemonitor",
+                "charliermarsh.ruff"
             ],
             "settings": {
-                "python.defaultInterpreterPath": "/usr/local/bin/python3",
+                "python.defaultInterpreterPath": "/usr/local/bin/python",
                 "python.terminal.activateEnvironment": false,
-                "python.pythonPath": "/usr/local/bin/python3",
+                "python.pythonPath": "/usr/local/bin/python",
                 "python.languageServer": "Pylance",
-                "python.showStartPage": false
+                "python.linting.enabled": true,
+                "python.linting.ruffEnabled": true,
+                "python.formatting.provider": "ruff",
+                "editor.formatOnSave": true,
+                "python.formatting.ruffPath": "/usr/local/bin/ruff" 
             }
         }
     }
