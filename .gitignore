@@ -7,7 +7,7 @@ __pycache__/
 *.so
 
 #ignore files inside tmp folder
-#tmp/*
+tmp/*
 #!tmp/
 
 # Distribution / packaging
