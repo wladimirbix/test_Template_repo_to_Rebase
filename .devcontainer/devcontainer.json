@@ -29,7 +29,8 @@
                 "python.linting.ruffEnabled": true,
                 "python.formatting.provider": "ruff",
                 "editor.formatOnSave": true,
-                "python.formatting.ruffPath": "/usr/local/bin/ruff" 
+                "python.formatting.ruffPath": "/usr/local/bin/ruff", 
+                "python.terminal.promptToCreateVirtualEnv": false
             }
         }
     }

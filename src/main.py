@@ -8,7 +8,6 @@ circle_area = pi_value * radius**2
 # Liste
 fruits = ["apple", "banana", "cherry"]
 
-
 # Dictionary
 person = {"name": "John", "age": 30, "city": "New York"}
 
