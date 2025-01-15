@@ -25,3 +25,4 @@ print(f"The area of the circle is: {circle_area}")
 print(f"Fruits list: {fruits}")
 print(f"Person details: {person}")
 print(greeting)
+
