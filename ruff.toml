@@ -13,8 +13,18 @@ select = [
     "SIM",
     # isort
     "I",
-    #Docstrings
-    "DOC"
+    # Docstrings
+    "D",
+    # Warnings
+    "W",
+    # pep8-Naming
+    "N",
+    # Annotations
+    "ANN",
+    # Flake bandit
+    "S",
+    #flake 8 bugbear
+    "B"
 ]
 
 # Select the maximum number of characters within a line
