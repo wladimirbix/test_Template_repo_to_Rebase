@@ -4,3 +4,4 @@ databricks-connect
 pandas
 dbt-core
 dbt-databricks
+databricks-cli
