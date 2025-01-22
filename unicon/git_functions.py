@@ -24,6 +24,7 @@ def git_cli(action):
         print(f"Profile '{profile_name}' deleted successfully.")
 
     elif action == "list_profiles":
+        # Retrieve Git profiles using the list_profiles function
         profiles = list_profiles("git")
         if profiles:
             for name, details in profiles.items():

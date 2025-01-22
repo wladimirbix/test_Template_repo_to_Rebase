@@ -24,6 +24,7 @@ def azure_cli(action):
         print(f"Profile '{profile_name}' deleted successfully.")
 
     elif action == "list_profiles":
+        # Retrieve Azure profiles using the list_profiles function
         profiles = list_profiles("azure")
         if profiles:
             for name, details in profiles.items():

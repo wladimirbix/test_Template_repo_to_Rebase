@@ -9,94 +9,92 @@ def prompt_for_action():
     """Prompts the user to select a platform and action."""
     print("Welcome to Unicon CLI!")
 
-    # Platform selection with exit option
-    while True:
-        platform = input("Choose a platform (databricks, azure, git) or type 'exit' to quit: ").strip().lower()
+    while True:  # Loop to allow restarting the process
+        # Platform selection with exit option
+        while True:
+            platform = input("Choose a platform (databricks, azure, git) or type 'exit' to quit: ").strip().lower()
 
-        if platform == "exit":
-            print("Exiting Unicon CLI...")
-            sys.exit(0)  # Exit the program
-        elif platform not in ["databricks", "azure", "git"]:
-            print("Invalid platform. Please choose from: databricks, azure, or git, or type 'exit' to quit.")
-        else:
-            break  # Proceed to action selection if a valid platform is chosen
+            if platform == "exit":
+                print("Exiting Unicon CLI...")
+                sys.exit(0)  # Exit the program
+            elif platform not in ["databricks", "azure", "git"]:
+                print("Invalid platform. Please choose from: databricks, azure, or git, or type 'exit' to quit.")
+            else:
+                break  # Proceed to action selection if a valid platform is chosen
 
-    # Action selection
-    while True:
-        if platform == "databricks":
-            action = (
-                input(
-                    "Choose action (create_profile, update_profile, delete_profile, list_profiles) or type 'back' to go back: "
+        # Action selection
+        while True:
+            if platform == "databricks":
+                action = (
+                    input(
+                        "Choose action (create_profile, update_profile, delete_profile, list_profiles) or type 'back' to go back: "
+                    )
+                    .strip()
+                    .lower()
                 )
-                .strip()
-                .lower()
-            )
-            if action == "back":
-                print("\nReturning to platform selection...\n")
-                break
-            elif action not in ["create_profile", "update_profile", "delete_profile", "list_profiles"]:
-                print(
-                    "Invalid action. Please choose from: create_profile, update_profile, delete_profile, list_profiles."
+                if action == "back":
+                    print("\nReturning to platform selection...\n")
+                    break  # This will restart the loop to choose platform
+                elif action not in ["create_profile", "update_profile", "delete_profile", "list_profiles"]:
+                    print(
+                        "Invalid action. Please choose from: create_profile, update_profile, delete_profile, list_profiles."
+                    )
+                else:
+                    # Handle actions
+                    databricks_cli(action)
+                    if action == "list_profiles":
+                        print("\nWhat would you like to do next?")
+                        continue
+                    break
+            elif platform == "azure":
+                action = (
+                    input(
+                        "Choose action (create_profile, update_profile, delete_profile, list_profiles) or type 'back' to go back: "
+                    )
+                    .strip()
+                    .lower()
                 )
-            else:
-                # Handle actions
-                databricks_cli(action)
-                if action == "list_profiles":
-                    # After listing profiles, prompt again
-                    print("\nWhat would you like to do next?")
-                    continue
-                break
-        elif platform == "azure":
-            action = (
-                input(
-                    "Choose action (create_profile, update_profile, delete_profile, list_profiles) or type 'back' to go back: "
+                if action == "back":
+                    print("\nReturning to platform selection...\n")
+                    break
+                elif action not in ["create_profile", "update_profile", "delete_profile", "list_profiles"]:
+                    print(
+                        "Invalid action. Please choose from: create_profile, update_profile, delete_profile, list_profiles."
+                    )
+                else:
+                    # Handle actions
+                    azure_cli(action)
+                    if action == "list_profiles":
+                        print("\nWhat would you like to do next?")
+                        continue
+                    break
+            elif platform == "git":
+                action = (
+                    input(
+                        "Choose action (create_profile, update_profile, delete_profile, list_profiles) or type 'back' to go back: "
+                    )
+                    .strip()
+                    .lower()
                 )
-                .strip()
-                .lower()
-            )
-            if action == "back":
-                print("\nReturning to platform selection...\n")
-                break
-            elif action not in ["create_profile", "update_profile", "delete_profile", "list_profiles"]:
-                print(
-                    "Invalid action. Please choose from: create_profile, update_profile, delete_profile, list_profiles."
-                )
-            else:
-                # Handle actions
-                azure_cli(action)
-                if action == "list_profiles":
-                    # After listing profiles, prompt again
-                    print("\nWhat would you like to do next?")
-                    continue
-                break
-        elif platform == "git":
-            action = (
-                input(
-                    "Choose action (create_profile, update_profile, delete_profile, list_profiles) or type 'back' to go back: "
-                )
-                .strip()
-                .lower()
-            )
-            if action == "back":
-                print("\nReturning to platform selection...\n")
-                break
-            elif action not in ["create_profile", "update_profile", "delete_profile", "list_profiles"]:
-                print(
-                    "Invalid action. Please choose from: create_profile, update_profile, delete_profile, list_profiles."
-                )
-            else:
-                # Handle actions
-                git_cli(action)
-                if action == "list_profiles":
-                    # After listing profiles, prompt again
-                    print("\nWhat would you like to do next?")
-                    continue
-                break
+                if action == "back":
+                    print("\nReturning to platform selection...\n")
+                    break
+                elif action not in ["create_profile", "update_profile", "delete_profile", "list_profiles"]:
+                    print(
+                        "Invalid action. Please choose from: create_profile, update_profile, delete_profile, list_profiles."
+                    )
+                else:
+                    # Handle actions
+                    git_cli(action)
+                    if action == "list_profiles":
+                        print("\nWhat would you like to do next?")
+                        continue
+                    break
 
-        # If any of the profile creation, update or deletion happens, return to platform selection
-        if action in ["create_profile", "update_profile", "delete_profile"]:
-            print("\nAction completed! Returning to platform selection...\n")
-            break
+            # If any of the profile creation, update or deletion happens, return to platform selection
+            if action in ["create_profile", "update_profile", "delete_profile"]:
+                print("\nAction completed! Returning to platform selection...\n")
+                break
 
 
 def create_or_update_profile(profile_type, action):
