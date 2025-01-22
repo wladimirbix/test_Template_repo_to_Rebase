@@ -1,139 +1,208 @@
-import os
-
-# Define the path to the Databricks CLI configuration file
-PROFILE_FILE = os.path.expanduser("~/.databrickscfg")
-
-
-# Function to load profiles (if any exist)
-def load_profiles():
-    profiles = {}
-    if os.path.exists(PROFILE_FILE):
-        with open(PROFILE_FILE, "r") as file:
-            current_profile = None
-            for line in file:
-                line = line.strip()
-                if line.startswith("["):
-                    # Start a new profile section
-                    current_profile = line.strip("[]")
-                    profiles[current_profile] = {}
-                elif "=" in line and current_profile:
-                    key, value = line.split("=", 1)
-                    profiles[current_profile][key.strip()] = value.strip()
-    return profiles
+import sys
+from profile_functions import create_profile, update_profile, delete_profile, list_profiles
+from databricks_functions import databricks_cli
+from azure_cli_functions import azure_cli
+from git_functions import git_cli
 
 
-# Function to save a profile to the Databricks CLI configuration file
-def save_profile(profile_name, host_name, token):
-    profiles = load_profiles()
+def prompt_for_action():
+    """Prompts the user to select a platform and action."""
+    print("Welcome to Unicon CLI!")
 
-    # If the profile already exists, overwrite it
-    profiles[profile_name] = {"host": host_name, "token": token}
-
-    with open(PROFILE_FILE, "w") as file:
-        for profile, details in profiles.items():
-            file.write(f"[{profile}]\n")
-            for key, value in details.items():
-                file.write(f"{key} = {value}\n")
-    print(f"Profile '{profile_name}' saved successfully in {PROFILE_FILE}")
-
-
-# Create a new profile for Databricks CLI
-def create_profile():
-    print("\n--- Create New Profile for Databricks CLI ---")
-    profile_name = input("Enter profile name: ")
-    host_name = input("Enter host name (Databricks workspace URL): ")
-    token = input("Enter your Databricks token: ")
-
-    save_profile(profile_name, host_name, token)
-
-
-# Update an existing profile
-def update_profile():
-    print("\n--- Update Profile for Databricks CLI ---")
-    profiles = load_profiles()
-    if not profiles:
-        print("No profiles found.")
-        return
-
-    profile_name = input("Enter profile name to update: ")
-    if profile_name not in profiles:
-        print(f"Profile '{profile_name}' does not exist.")
-        return
-
-    host_name = input(f"Enter new host name (current: {profiles[profile_name].get('host', 'N/A')}): ")
-    token = input("Enter new token (leave blank to keep current): ")
-
-    # If the user leaves token blank, keep the existing token
-    if not token:
-        token = profiles[profile_name].get("token")
-
-    save_profile(profile_name, host_name, token)
-
-
-# Delete an existing profile
-def delete_profile():
-    print("\n--- Delete Profile ---")
-    profiles = load_profiles()
-    if not profiles:
-        print("No profiles found.")
-        return
-
-    profile_name = input("Enter profile name to delete: ")
-    if profile_name not in profiles:
-        print(f"Profile '{profile_name}' does not exist.")
-        return
-
-    # Load the profiles and remove the selected profile
-    profiles.pop(profile_name)
-
-    with open(PROFILE_FILE, "w") as file:
-        for profile, details in profiles.items():
-            file.write(f"[{profile}]\n")
-            for key, value in details.items():
-                file.write(f"{key} = {value}\n")
-
-    print(f"Profile '{profile_name}' deleted successfully.")
-
-
-# List all profiles
-def list_profiles():
-    print("\n--- List Profiles ---")
-    profiles = load_profiles()
-    if not profiles:
-        print("No profiles found.")
-        return
-
-    for profile_name, details in profiles.items():
-        print(f"\nProfile: {profile_name}")
-        print(f"Host: {details.get('host', 'N/A')}")
-        print(f"Token: {details.get('token', 'N/A')}")
-
-
-# Main function to handle the console
-def main():
+    # Platform selection with exit option
     while True:
-        print("\n--- Unicon CLI ---")
-        print("1. Create Profile (Databricks CLI)")
-        print("2. Update Profile (Databricks CLI)")
-        print("3. Delete Profile (Databricks CLI)")
-        print("4. List Profiles (Databricks CLI)")
-        print("5. Exit")
+        platform = input("Choose a platform (databricks, azure, git) or type 'exit' to quit: ").strip().lower()
 
-        choice = input("Enter your choice (1/2/3/4/5): ")
-
-        if choice == "1":
-            create_profile()
-        elif choice == "2":
-            update_profile()
-        elif choice == "3":
-            delete_profile()
-        elif choice == "4":
-            list_profiles()
-        elif choice == "5":
-            print("Exiting...")
-            break
+        if platform == "exit":
+            print("Exiting Unicon CLI...")
+            sys.exit(0)  # Exit the program
+        elif platform not in ["databricks", "azure", "git"]:
+            print("Invalid platform. Please choose from: databricks, azure, or git, or type 'exit' to quit.")
         else:
-            print("Invalid choice, please try again.")
+            break  # Proceed to action selection if a valid platform is chosen
+
+    # Action selection
+    while True:
+        if platform == "databricks":
+            action = (
+                input(
+                    "Choose action (create_profile, update_profile, delete_profile, list_profiles) or type 'back' to go back: "
+                )
+                .strip()
+                .lower()
+            )
+            if action == "back":
+                print("\nReturning to platform selection...\n")
+                break
+            elif action not in ["create_profile", "update_profile", "delete_profile", "list_profiles"]:
+                print(
+                    "Invalid action. Please choose from: create_profile, update_profile, delete_profile, list_profiles."
+                )
+            else:
+                # Handle actions
+                databricks_cli(action)
+                if action == "list_profiles":
+                    # After listing profiles, prompt again
+                    print("\nWhat would you like to do next?")
+                    continue
+                break
+        elif platform == "azure":
+            action = (
+                input(
+                    "Choose action (create_profile, update_profile, delete_profile, list_profiles) or type 'back' to go back: "
+                )
+                .strip()
+                .lower()
+            )
+            if action == "back":
+                print("\nReturning to platform selection...\n")
+                break
+            elif action not in ["create_profile", "update_profile", "delete_profile", "list_profiles"]:
+                print(
+                    "Invalid action. Please choose from: create_profile, update_profile, delete_profile, list_profiles."
+                )
+            else:
+                # Handle actions
+                azure_cli(action)
+                if action == "list_profiles":
+                    # After listing profiles, prompt again
+                    print("\nWhat would you like to do next?")
+                    continue
+                break
+        elif platform == "git":
+            action = (
+                input(
+                    "Choose action (create_profile, update_profile, delete_profile, list_profiles) or type 'back' to go back: "
+                )
+                .strip()
+                .lower()
+            )
+            if action == "back":
+                print("\nReturning to platform selection...\n")
+                break
+            elif action not in ["create_profile", "update_profile", "delete_profile", "list_profiles"]:
+                print(
+                    "Invalid action. Please choose from: create_profile, update_profile, delete_profile, list_profiles."
+                )
+            else:
+                # Handle actions
+                git_cli(action)
+                if action == "list_profiles":
+                    # After listing profiles, prompt again
+                    print("\nWhat would you like to do next?")
+                    continue
+                break
+
+        # If any of the profile creation, update or deletion happens, return to platform selection
+        if action in ["create_profile", "update_profile", "delete_profile"]:
+            print("\nAction completed! Returning to platform selection...\n")
+            break
+
+
+def create_or_update_profile(profile_type, action):
+    """Handles profile creation or update with a cancel option."""
+    profiles = list_profiles(profile_type)
+
+    if action == "create_profile":
+        while True:
+            profile_name = input("Enter profile name or type 'cancel' to go back: ").strip()
+            if profile_name == "cancel":
+                print("Profile creation cancelled. Returning to platform selection...\n")
+                return  # Exit the function to avoid further processing
+
+            if profile_name in profiles:
+                print(f"Profile '{profile_name}' already exists. Please choose a different name.")
+                continue  # Ask for a different name if the profile exists
+            else:
+                break  # Continue if the profile name is unique
+
+        subscription_id = input("Enter subscription ID: ").strip()
+        tenant_id = input("Enter tenant ID: ").strip()
+
+        # Confirm before creating
+        if input(f"Create profile '{profile_name}'? (yes/cancel): ").strip().lower() == "yes":
+            create_profile(profile_type, profile_name, subscription_id=subscription_id, tenant_id=tenant_id)
+            print(f"Profile '{profile_name}' created successfully.")
+        else:
+            print(f"Profile creation for '{profile_name}' cancelled.")
+
+        # Return to platform selection after creation
+        prompt_for_action()
+
+    elif action == "update_profile":
+        profile_name = input("Enter profile name to update or type 'cancel' to go back: ").strip()
+        if profile_name == "cancel":
+            print("Profile update cancelled. Returning to platform selection...\n")
+            return  # Exit the function to avoid further processing
+        if profile_name not in profiles:
+            print(f"Profile '{profile_name}' does not exist.")
+            return
+
+        new_name = input("New profile name (leave blank to keep current): ").strip()
+
+        # Check if the new name already exists
+        if new_name and new_name in profiles:
+            print(
+                f"Profile '{new_name}' already exists. Please choose a different name or leave blank to keep current name."
+            )
+            return  # Don't allow overwriting of an existing profile
+
+        subscription_id = input("New subscription ID (leave blank to keep current): ").strip()
+        tenant_id = input("New tenant ID (leave blank to keep current): ").strip()
+
+        # Confirm before updating
+        if input(f"Update profile '{profile_name}'? (yes/cancel): ").strip().lower() == "yes":
+            update_profile(
+                profile_type, profile_name, new_name=new_name, subscription_id=subscription_id, tenant_id=tenant_id
+            )
+            print(f"Profile '{profile_name}' updated successfully.")
+        else:
+            print(f"Profile update for '{profile_name}' cancelled.")
+
+        # Return to platform selection after update
+        prompt_for_action()
+
+    elif action == "delete_profile":
+        profile_name = input("Enter profile name to delete or type 'cancel' to go back: ").strip()
+        if profile_name == "cancel":
+            print("Profile deletion cancelled. Returning to platform selection...\n")
+            return  # Exit the function to avoid further processing
+        # Confirm before deleting
+        if input(f"Delete profile '{profile_name}'? (yes/cancel): ").strip().lower() == "yes":
+            delete_profile(profile_type, profile_name)
+            print(f"Profile '{profile_name}' deleted successfully.")
+        else:
+            print(f"Profile deletion for '{profile_name}' cancelled.")
+        # Return to platform selection after deletion
+        prompt_for_action()
+
+    elif action == "list_profiles":
+        profiles = list_profiles(profile_type)
+        if profiles:
+            for name, details in profiles.items():
+                print(f"- {name}: Subscription ID: {details['subscription_id']}")
+        else:
+            print(f"No profiles found for {profile_type}.")
+        # Return to platform selection after listing profiles
+        prompt_for_action()
+
+
+def main():
+    """Central CLI interface for Unicon."""
+    if len(sys.argv) > 1:  # If arguments are provided, process them directly
+        command = sys.argv[1]
+        if command == "databricks":
+            databricks_cli(sys.argv[2])  # Pass the action as a string, not a list
+        elif command == "azure":
+            azure_cli(sys.argv[2])  # Pass the action as a string, not a list
+        elif command == "git":
+            git_cli(sys.argv[2])  # Pass the action as a string, not a list
+        else:
+            print("Unknown command.")
+            sys.exit(1)
+    else:
+        # Otherwise, prompt for input interactively
+        prompt_for_action()
 
 
 if __name__ == "__main__":
