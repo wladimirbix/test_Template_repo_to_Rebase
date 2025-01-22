@@ -1,5 +1,8 @@
 FROM python:3.12
 
+RUN curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
+
+
 RUN apt-get update -y && \
     apt-get install -y azure-cli
 
