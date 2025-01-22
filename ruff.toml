@@ -23,8 +23,12 @@ select = [
     "ANN",
     # Flake bandit
     "S",
-    #flake 8 bugbear
-    "B"
+    # Flake 8 bugbear
+    "B",
+    # Flake8 logging
+    "LOG",
+    # Flake 8 logging format
+    "G"
 ]
 
 # Select the maximum number of characters within a line

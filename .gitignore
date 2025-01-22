@@ -9,6 +9,9 @@ __pycache__/
 #ignore files inside tmp folder
 tmp/*
 
+# ignore config files
+~/.unicon/
+
 # Distribution / packaging
 .Python
 build/
