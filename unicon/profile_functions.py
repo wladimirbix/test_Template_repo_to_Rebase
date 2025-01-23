@@ -36,3 +36,30 @@ def delete_profile(profile_type: str, profile_name: str) -> None:
 def list_profiles(profile_type: str) -> Dict[str, Dict[str, str]]:
     """Lists all profiles for the specified platform."""
     return load_profiles(profile_type)
+
+
+def set_default_profile(profile_type, profile_name):
+    """
+    Set the specified profile as the default profile for the given platform type.
+
+    Args:
+        profile_type (str): The type of profile (e.g., 'azure', 'databricks', 'git').
+        profile_name (str): The name of the profile to set as default.
+
+    """
+    profiles = load_profiles(profile_type)  # Load existing profiles (replace with actual implementation)
+
+    if profile_name not in profiles:
+        print(f"Profile '{profile_name}' does not exist. Cannot set as default.")
+        return
+
+    # Clear any existing default profile
+    for name in profiles:
+        profiles[name]["default"] = False
+
+    # Set the specified profile as default
+    profiles[profile_name]["default"] = True
+
+    # Save updated profiles (replace with actual save logic)
+    save_profiles(profile_type, profiles)
+    print(f"Default profile set to '{profile_name}'.")

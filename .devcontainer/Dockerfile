@@ -17,4 +17,10 @@ RUN uv pip install --no-cache --system -r requirements.txt
 
 WORKDIR /project
 
+
 COPY ./ /project
+
+# CMD ["python", "config_builder.py"]
+
+
+#RUN python config_builder.py
