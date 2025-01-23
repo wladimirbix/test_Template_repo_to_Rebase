@@ -1,7 +1,9 @@
 import sys
+from profile_functions import create_profile, update_profile, delete_profile, list_profiles, set_default_profile
 from databricks_functions import databricks_cli
 from azure_cli_functions import azure_cli
 from git_functions import git_cli
+from config_builder import build_all_configs  # Import the function
 
 
 def prompt_for_action():
@@ -26,7 +28,7 @@ def prompt_for_action():
             if platform == "databricks":
                 action = (
                     input(
-                        "Choose action (create_profile, update_profile, delete_profile, list_profiles) or type 'back' to go back: "
+                        "Choose action (create_profile, update_profile, delete_profile, list_profiles, set_default_profile) or type 'back' to go back: "
                     )
                     .strip()
                     .lower()
@@ -34,9 +36,15 @@ def prompt_for_action():
                 if action == "back":
                     print("\nReturning to platform selection...\n")
                     break  # This will restart the loop to choose platform
-                elif action not in ["create_profile", "update_profile", "delete_profile", "list_profiles"]:
+                elif action not in [
+                    "create_profile",
+                    "update_profile",
+                    "delete_profile",
+                    "list_profiles",
+                    "set_default_profile",
+                ]:
                     print(
-                        "Invalid action. Please choose from: create_profile, update_profile, delete_profile, list_profiles."
+                        "Invalid action. Please choose from: create_profile, update_profile, delete_profile, list_profiles, set_default_profile."
                     )
                 else:
                     # Handle actions
@@ -56,7 +64,12 @@ def prompt_for_action():
                 if action == "back":
                     print("\nReturning to platform selection...\n")
                     break
-                elif action not in ["create_profile", "update_profile", "delete_profile", "list_profiles"]:
+                elif action not in [
+                    "create_profile",
+                    "update_profile",
+                    "delete_profile",
+                    "list_profiles",
+                ]:
                     print(
                         "Invalid action. Please choose from: create_profile, update_profile, delete_profile, list_profiles."
                     )
@@ -78,7 +91,12 @@ def prompt_for_action():
                 if action == "back":
                     print("\nReturning to platform selection...\n")
                     break
-                elif action not in ["create_profile", "update_profile", "delete_profile", "list_profiles"]:
+                elif action not in [
+                    "create_profile",
+                    "update_profile",
+                    "delete_profile",
+                    "list_profiles",
+                ]:
                     print(
                         "Invalid action. Please choose from: create_profile, update_profile, delete_profile, list_profiles."
                     )
@@ -98,15 +116,7 @@ def prompt_for_action():
 
 def create_or_update_profile(profile_type, action):
     """Handles profile creation or update with a cancel option."""
-    # Depending on the platform, use the appropriate list_profiles function
-    if profile_type == "databricks":
-        list_profiles_func = databricks_cli.list_profiles
-    elif profile_type == "azure":
-        list_profiles_func = azure_cli.list_profiles
-    elif profile_type == "git":
-        list_profiles_func = git_cli.list_profiles
-
-    profiles = list_profiles_func()
+    profiles = list_profiles(profile_type)
 
     if action == "create_profile":
         while True:
@@ -126,15 +136,9 @@ def create_or_update_profile(profile_type, action):
 
         # Confirm before creating
         if input(f"Create profile '{profile_name}'? (yes/cancel): ").strip().lower() == "yes":
-            if profile_type == "databricks":
-                create_profile = databricks_cli.create_profile
-            elif profile_type == "azure":
-                create_profile = azure_cli.create_profile
-            elif profile_type == "git":
-                create_profile = git_cli.create_profile
-
-            create_profile(profile_name, subscription_id, tenant_id)
+            create_profile(profile_type, profile_name, subscription_id=subscription_id, tenant_id=tenant_id)
             print(f"Profile '{profile_name}' created successfully.")
+            build_all_configs()  # Call the function after deleting a profile
         else:
             print(f"Profile creation for '{profile_name}' cancelled.")
 
@@ -164,19 +168,35 @@ def create_or_update_profile(profile_type, action):
 
         # Confirm before updating
         if input(f"Update profile '{profile_name}'? (yes/cancel): ").strip().lower() == "yes":
-            if profile_type == "databricks":
-                update_profile = databricks_cli.update_profile
-            elif profile_type == "azure":
-                update_profile = azure_cli.update_profile
-            elif profile_type == "git":
-                update_profile = git_cli.update_profile
-
-            update_profile(profile_name, new_name, subscription_id, tenant_id)
+            update_profile(
+                profile_type, profile_name, new_name=new_name, subscription_id=subscription_id, tenant_id=tenant_id
+            )
             print(f"Profile '{profile_name}' updated successfully.")
+            build_all_configs()  # Call the function after deleting a profile
         else:
             print(f"Profile update for '{profile_name}' cancelled.")
 
         # Return to platform selection after update
+        prompt_for_action()
+
+    elif action == "select_default_profile":
+        profile_name = input("Enter profile name to set as default or type 'cancel' to go back: ").strip()
+        if profile_name == "cancel":
+            print("Default profile selection cancelled. Returning to platform selection...\n")
+            return  # Exit the function to avoid further processing
+        if profile_name not in profiles:
+            print(f"Profile '{profile_name}' does not exist.")
+            return
+
+        # Confirm before setting default
+        if input(f"Set '{profile_name}' as the default profile? (yes/cancel): ").strip().lower() == "yes":
+            set_default_profile(profile_type, profile_name)  # Assuming set_default_profile is implemented
+            print(f"Profile '{profile_name}' is now set as the default profile.")
+            build_all_configs()  # Call the function to rebuild the configurations
+        else:
+            print(f"Default profile selection for '{profile_name}' cancelled.")
+
+        # Return to platform selection after setting the default
         prompt_for_action()
 
     elif action == "delete_profile":
@@ -186,29 +206,16 @@ def create_or_update_profile(profile_type, action):
             return  # Exit the function to avoid further processing
         # Confirm before deleting
         if input(f"Delete profile '{profile_name}'? (yes/cancel): ").strip().lower() == "yes":
-            if profile_type == "databricks":
-                delete_profile = databricks_cli.delete_profile
-            elif profile_type == "azure":
-                delete_profile = azure_cli.delete_profile
-            elif profile_type == "git":
-                delete_profile = git_cli.delete_profile
-
-            delete_profile(profile_name)
+            delete_profile(profile_type, profile_name)
             print(f"Profile '{profile_name}' deleted successfully.")
+            build_all_configs()  # Call the function after deleting a profile
         else:
             print(f"Profile deletion for '{profile_name}' cancelled.")
         # Return to platform selection after deletion
         prompt_for_action()
 
     elif action == "list_profiles":
-        if profile_type == "databricks":
-            list_profiles = databricks_cli.list_profiles
-        elif profile_type == "azure":
-            list_profiles = azure_cli.list_profiles
-        elif profile_type == "git":
-            list_profiles = git_cli.list_profiles
-
-        profiles = list_profiles()
+        profiles = list_profiles(profile_type)
         if profiles:
             for name, details in profiles.items():
                 print(f"- {name}: Subscription ID: {details['subscription_id']}")
