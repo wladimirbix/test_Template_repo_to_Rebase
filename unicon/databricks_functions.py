@@ -1,6 +1,5 @@
 import os
 
-
 # Path to the .databrickscfg file, typically located in the user's home directory.
 DATABRICKS_CFG_PATH = os.path.expanduser("~/.databrickscfg")
 
@@ -24,7 +23,7 @@ def _read_databricks_profiles():
                     key, value = line.split("=", 1)
                     profile_data[key.strip()] = value.strip()
             if profile_name:
-                profiles[profile_name] = profile_data  # last profile
+                profiles[profile_name] = profile_data  # add last profile
     return profiles
 
 
@@ -95,6 +94,22 @@ def list_profiles():
     return profiles
 
 
+def set_default_profile(profile_name):
+    """
+    Set the given profile as the default in the .databrickscfg file.
+    This function marks the chosen profile with a 'default' flag.
+    """
+    profiles = _read_databricks_profiles()
+    if profile_name not in profiles:
+        print(f"Profile '{profile_name}' does not exist.")
+        return
+    # Set the default flag for the selected profile and unset for others.
+    for name, data in profiles.items():
+        data["default"] = "true" if name == profile_name else "false"
+    _write_databricks_profiles(profiles)
+    print(f"Profile '{profile_name}' is now set as the default.")
+
+
 def databricks_cli(action):
     """Databricks-specific CLI operations."""
     if action == "create_profile":
@@ -118,20 +133,20 @@ def databricks_cli(action):
         profiles = list_profiles()
         if profiles:
             for name, details in profiles.items():
-                default_status = " (default)" if details.get("default", False) else ""
+                default_status = " (default)" if details.get("default", "").lower() == "true" else ""
                 print(f"- {name}: Host: {details['host']}{default_status}")
         else:
             print("No Databricks profiles found.")
 
     elif action == "set_default_profile":
-        profiles = list_profiles("databricks")
+        profiles = list_profiles()
         if not profiles:
             print("No profiles found. Please create a profile first.")
             return
 
         print("Available profiles:")
         for name, details in profiles.items():
-            default_status = " (default)" if details.get("default", False) else ""
+            default_status = " (default)" if details.get("default", "").lower() == "true" else ""
             print(f"- {name}{default_status}")
 
         profile_name = input("Enter the profile name to set as default: ").strip()
@@ -140,19 +155,10 @@ def databricks_cli(action):
             print(f"Profile '{profile_name}' does not exist.")
             return
 
-        # Set the selected profile as default and unset other defaults
-        for name, details in profiles.items():
-            if name == profile_name:
-                details["default"] = True
-            else:
-                details["default"] = False
+        set_default_profile(profile_name)
 
-        # Save the updated profiles back
-        update_profile("databricks", profile_name, default=True)
-        print(f"Profile '{profile_name}' is now set as the default.")
-
-        # Run the build_all_configs function
-        from config_builder import build_all_configs  # Importing here to avoid unnecessary dependencies
+        # Run the build_all_configs function to rebuild configurations.
+        from config_builder import build_all_configs
 
         build_all_configs()
 

@@ -1,7 +1,6 @@
 import configparser
 import os
 
-
 # Path to the Azure config file, typically located in the user's home directory.
 AZURE_CFG_PATH = os.path.expanduser("~/.azure/config")
 
