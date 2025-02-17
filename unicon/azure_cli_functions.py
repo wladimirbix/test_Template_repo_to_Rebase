@@ -1,4 +1,5 @@
 from config_manager import load_profiles, save_profiles
+from config_builder import build_azure_config  # Neu: für automatischen Build der Konfiguration
 
 
 def create_profile(profile_name, subscription_id, tenant_id):
@@ -9,6 +10,7 @@ def create_profile(profile_name, subscription_id, tenant_id):
         return
     profiles[profile_name] = {"subscription_id": subscription_id, "tenant_id": tenant_id}
     save_profiles("azure", profiles)
+    build_azure_config()  # Konfigurationen aktualisieren
     print(f"Profile '{profile_name}' created successfully.")
 
 
@@ -26,6 +28,7 @@ def update_profile(profile_name, new_name=None, subscription_id=None, tenant_id=
     if new_name:
         profiles[new_name] = profiles.pop(profile_name)
     save_profiles("azure", profiles)
+    build_azure_config()  # Konfigurationen aktualisieren
     print(f"Profile '{profile_name}' updated successfully.")
 
 
@@ -37,6 +40,7 @@ def delete_profile(profile_name):
         return
     del profiles[profile_name]
     save_profiles("azure", profiles)
+    build_azure_config()  # Konfigurationen aktualisieren
     print(f"Profile '{profile_name}' deleted successfully.")
 
 

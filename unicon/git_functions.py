@@ -1,4 +1,5 @@
 from config_manager import load_profiles, save_profiles
+from config_builder import build_git_config  # Neu: zum automatischen Aktualisieren der Konfiguration
 
 
 def create_profile(profile_name, username, token):
@@ -9,6 +10,7 @@ def create_profile(profile_name, username, token):
         return
     profiles[profile_name] = {"username": username, "token": token}
     save_profiles("git", profiles)
+    build_git_config()  # Konfigurationen aktualisieren
     print(f"Profile '{profile_name}' created successfully.")
 
 
@@ -27,6 +29,7 @@ def update_profile(profile_name, new_name=None, username=None, token=None):
     if token:
         profile_data["token"] = token
     save_profiles("git", profiles)
+    build_git_config()  # Konfigurationen aktualisieren
     print(f"Profile '{profile_name}' updated successfully.")
 
 
@@ -38,6 +41,7 @@ def delete_profile(profile_name):
         return
     del profiles[profile_name]
     save_profiles("git", profiles)
+    build_git_config()  # Konfigurationen aktualisieren
     print(f"Profile '{profile_name}' deleted successfully.")
 
 

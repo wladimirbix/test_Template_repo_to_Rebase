@@ -2,7 +2,7 @@ import os
 import json
 
 # Define paths for configuration directory and files
-CONFIG_DIR = os.path.join(os.path.dirname(__file__), "unicon", "config")
+CONFIG_DIR = os.path.join(os.path.dirname(__file__), "config")
 AZURE_JSON = os.path.join(CONFIG_DIR, "azure_profiles.json")
 DATABRICKS_JSON = os.path.join(CONFIG_DIR, "databricks_profiles.json")
 GIT_JSON = os.path.join(CONFIG_DIR, "git_profiles.json")

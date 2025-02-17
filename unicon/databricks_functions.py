@@ -1,4 +1,5 @@
 from config_manager import load_profiles, save_profiles
+from config_builder import build_databricks_config  # Neu: zum automatischen Aktualisieren der Konfigs
 
 
 def create_profile(profile_name, host, token):
@@ -9,6 +10,7 @@ def create_profile(profile_name, host, token):
         return
     profiles[profile_name] = {"host": host, "token": token}
     save_profiles("databricks", profiles)
+    build_databricks_config()  # Konfigurationen aktualisieren
     print(f"Profile '{profile_name}' created successfully.")
 
 
@@ -26,6 +28,7 @@ def update_profile(profile_name, new_name=None, host=None, token=None):
     if new_name:
         profiles[new_name] = profiles.pop(profile_name)
     save_profiles("databricks", profiles)
+    build_databricks_config()  # Konfigurationen aktualisieren
     print(f"Profile '{profile_name}' updated successfully.")
 
 
@@ -37,6 +40,7 @@ def delete_profile(profile_name):
         return
     del profiles[profile_name]
     save_profiles("databricks", profiles)
+    build_databricks_config()  # Konfigurationen aktualisieren
     print(f"Profile '{profile_name}' deleted successfully.")
 
 
@@ -51,11 +55,12 @@ def set_default_profile(profile_name):
     if profile_name not in profiles:
         print(f"Profile '{profile_name}' does not exist.")
         return
-    # Alle Profile zunächst auf "default": False setzen
+    # Alle Profile zunächst auf default False setzen
     for key in profiles:
         profiles[key]["default"] = False
     profiles[profile_name]["default"] = True
     save_profiles("databricks", profiles)
+    build_databricks_config()  # Konfigurationen aktualisieren
     print(f"Profile '{profile_name}' is now set as the default.")
 
 
