@@ -1,96 +1,58 @@
-import configparser
-import os
-
-
-def get_gitconfig_path():
-    """Retrieve the path to the user's .gitconfig file."""
-    home_dir = os.path.expanduser("~")
-    return os.path.join(home_dir, ".gitconfig")
+from config_manager import load_profiles, save_profiles
 
 
 def create_profile(profile_name, username, token):
-    """Create a Git profile in the .gitconfig file."""
-    config_path = get_gitconfig_path()
-    config = configparser.ConfigParser()
-    config.read(config_path)
-
-    section_name = f'profile "{profile_name}"'
-    if not config.has_section(section_name):
-        config.add_section(section_name)
-
-    config.set(section_name, "username", username)
-    config.set(section_name, "token", token)
-
-    with open(config_path, "w") as configfile:
-        config.write(configfile)
-
+    """Erstellt ein Git-Profil in der JSON-Datei."""
+    profiles = load_profiles("git")
+    if profile_name in profiles:
+        print(f"Profile '{profile_name}' already exists.")
+        return
+    profiles[profile_name] = {"username": username, "token": token}
+    save_profiles("git", profiles)
     print(f"Profile '{profile_name}' created successfully.")
 
 
 def update_profile(profile_name, new_name=None, username=None, token=None):
-    """Update an existing Git profile in the .gitconfig file."""
-    config_path = get_gitconfig_path()
-    config = configparser.ConfigParser()
-    config.read(config_path)
-
-    section_name = f'profile "{profile_name}"'
-    if not config.has_section(section_name):
+    """Aktualisiert ein vorhandenes Git-Profil in der JSON-Datei."""
+    profiles = load_profiles("git")
+    if profile_name not in profiles:
         print(f"Profile '{profile_name}' does not exist.")
         return
-
     if new_name:
-        new_section_name = f'profile "{new_name}"'
-        config.add_section(new_section_name)
-        for key, value in config.items(section_name):
-            config.set(new_section_name, key, value)
-        config.remove_section(section_name)
-        section_name = new_section_name
-
+        profiles[new_name] = profiles.pop(profile_name)
+        profile_name = new_name
+    profile_data = profiles[profile_name]
     if username:
-        config.set(section_name, "username", username)
+        profile_data["username"] = username
     if token:
-        config.set(section_name, "token", token)
-
-    with open(config_path, "w") as configfile:
-        config.write(configfile)
-
+        profile_data["token"] = token
+    save_profiles("git", profiles)
     print(f"Profile '{profile_name}' updated successfully.")
 
 
 def delete_profile(profile_name):
-    """Delete a Git profile from the .gitconfig file."""
-    config_path = get_gitconfig_path()
-    config = configparser.ConfigParser()
-    config.read(config_path)
-
-    section_name = f'profile "{profile_name}"'
-    if config.has_section(section_name):
-        config.remove_section(section_name)
-        with open(config_path, "w") as configfile:
-            config.write(configfile)
-        print(f"Profile '{profile_name}' deleted successfully.")
-    else:
+    """Löscht ein Git-Profil aus der JSON-Datei."""
+    profiles = load_profiles("git")
+    if profile_name not in profiles:
         print(f"Profile '{profile_name}' does not exist.")
+        return
+    del profiles[profile_name]
+    save_profiles("git", profiles)
+    print(f"Profile '{profile_name}' deleted successfully.")
 
 
 def list_profiles():
-    """List all Git profiles in the .gitconfig file."""
-    config_path = get_gitconfig_path()
-    config = configparser.ConfigParser()
-    config.read(config_path)
-
-    profiles = [section for section in config.sections() if section.startswith("profile ")]
+    """Listet alle Git-Profile aus der JSON-Datei auf."""
+    profiles = load_profiles("git")
     if profiles:
-        for profile in profiles:
-            profile_name = profile.split(" ")[1].strip('"')
-            username = config.get(profile, "username", fallback="N/A")
-            print(f"- {profile_name}: Username: {username}")
+        for name, details in profiles.items():
+            print(f"- {name}: Username: {details.get('username', 'N/A')}")
     else:
         print("No Git profiles found.")
 
 
 def git_cli(action):
-    """Git-specific CLI operations."""
+    """Git-spezifische CLI-Operationen."""
     if action == "create_profile":
         profile_name = input("Enter profile name: ").strip()
         username = input("Enter Git username: ").strip()
