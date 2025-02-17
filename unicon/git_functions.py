@@ -1,5 +1,11 @@
 from config_manager import load_profiles, save_profiles
 from config_builder import build_git_config  # Neu: zum automatischen Aktualisieren der Konfiguration
+import subprocess
+
+
+def test_git_connection():
+    """Führt 'git config --global --list' aus, um die gespeicherten Git-Konfigurationen zu prüfen."""
+    subprocess.run("git config --global --list", shell=True, check=True)
 
 
 def create_profile(profile_name, username, token):
@@ -59,9 +65,14 @@ def git_cli(action):
     """Git-spezifische CLI-Operationen."""
     if action == "create_profile":
         profile_name = input("Enter profile name: ").strip()
-        username = input("Enter Git username: ").strip()
-        token = input("Enter Git token: ").strip()
+        username = input("Gib deinen Git-Benutzernamen ein (z. B. 'max_mustermann'): ").strip()
+        token = input(
+            "Gib deinen Git-Token ein (du kannst deinen Token unter https://github.com/settings/tokens finden): "
+        ).strip()
+
         create_profile(profile_name, username, token)
+        print("Testing Profile, please wait...")
+        test_git_connection()
 
     elif action == "update_profile":
         profile_name = input("Enter profile name to update: ").strip()

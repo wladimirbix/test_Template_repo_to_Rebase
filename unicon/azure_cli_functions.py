@@ -1,5 +1,11 @@
 from config_manager import load_profiles, save_profiles
 from config_builder import build_azure_config  # Neu: für automatischen Build der Konfiguration
+import subprocess
+
+
+def test_azure_connection():
+    """Führt den Befehl 'az account list' direkt in der Konsole aus."""
+    subprocess.run("az account list", shell=True, check=True)
 
 
 def create_profile(profile_name, subscription_id, tenant_id):
@@ -58,9 +64,23 @@ def azure_cli(action):
     """Azure-spezifische CLI-Operationen."""
     if action == "create_profile":
         profile_name = input("Enter profile name: ").strip()
-        subscription_id = input("Enter Azure subscription ID: ").strip()
-        tenant_id = input("Enter Azure tenant ID: ").strip()
+        subscription_id = input(
+            "Enter Azure Subscription ID.\n"
+            "You can find this in the Azure portal under 'Subscriptions'.\n"
+            "Example: 12345678-90ab-cdef-1234-567890abcdef\n"
+            "Subscription ID: "
+        ).strip()
+
+        tenant_id = input(
+            "Enter Azure Tenant ID.\n"
+            "You can find this in the Azure portal under 'Azure Active Directory' → 'Tenant ID'.\n"
+            "Example: abcdef12-3456-7890-abcd-ef1234567890\n"
+            "Tenant ID: "
+        ).strip()
+
         create_profile(profile_name, subscription_id=subscription_id, tenant_id=tenant_id)
+        print("Testing Profile, please wait...")
+        test_azure_connection()
 
     elif action == "update_profile":
         profile_name = input("Enter profile name to update: ").strip()

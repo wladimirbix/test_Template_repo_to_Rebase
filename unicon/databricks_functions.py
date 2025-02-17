@@ -1,5 +1,11 @@
 from config_manager import load_profiles, save_profiles
 from config_builder import build_databricks_config  # Neu: zum automatischen Aktualisieren der Konfigs
+import subprocess
+
+
+def test_databricks_connection():
+    """Führt den Befehl 'databricks auth profiles' direkt in der Konsole aus."""
+    subprocess.run("databricks auth profiles", shell=True, check=True)
 
 
 def create_profile(profile_name, host, token):
@@ -10,7 +16,6 @@ def create_profile(profile_name, host, token):
         return
     profiles[profile_name] = {"host": host, "token": token}
     save_profiles("databricks", profiles)
-    build_databricks_config()  # Konfigurationen aktualisieren
     print(f"Profile '{profile_name}' created successfully.")
 
 
@@ -68,9 +73,22 @@ def databricks_cli(action):
     """Databricks-spezifische CLI-Operationen."""
     if action == "create_profile":
         profile_name = input("Enter profile name: ").strip()
-        host = input("Enter Databricks host: ").strip()
-        token = input("Enter Databricks token: ").strip()
+        host = input(
+            "Enter Databricks host (e.g., https://adb-1234567890.12.azuredatabricks.net).\n"
+            "You can find this in your Databricks workspace URL.\n"
+            "Host: "
+        ).strip()
+
+        token = input(
+            "Enter Databricks personal access token.\n"
+            "You can generate this token in Databricks under 'User Settings' → 'Access Tokens'.\n"
+            "Example: dapiclient1234abcdef567890...\n"
+            "Token: "
+        ).strip()
         create_profile(profile_name, host=host, token=token)
+        set_default_profile(profile_name)
+        print("Testing Profile, please wait...")
+        test_databricks_connection()
 
     elif action == "update_profile":
         profile_name = input("Enter profile name to update: ").strip()
@@ -97,15 +115,14 @@ def databricks_cli(action):
         if not profiles:
             print("No profiles found. Please create a profile first.")
             return
+
         print("Available profiles:")
         for name, details in profiles.items():
             default_status = " (default)" if details.get("default", False) else ""
             print(f"- {name}{default_status}")
+
         profile_name = input("Enter the profile name to set as default: ").strip()
-        if profile_name not in profiles:
-            print(f"Profile '{profile_name}' does not exist.")
-            return
-        set_default_profile(profile_name)
+        set_default_profile(profile_name)  # Direkter Funktionsaufruf
 
     else:
         print(f"Unknown Databricks action: {action}")
