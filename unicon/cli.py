@@ -225,7 +225,7 @@ def create_or_update_profile(profile_type, action):
         prompt_for_action()
 
 
-def main():
+def main() -> None:
     """Central CLI interface for Unicon."""
     if len(sys.argv) > 1:  # If arguments are provided, process them directly
         command = sys.argv[1]
