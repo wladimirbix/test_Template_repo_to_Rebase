@@ -88,3 +88,4 @@ def build_all_configs():
 
 if __name__ == "__main__":
     build_all_configs()
+    print("Config builder ran successfully.")
