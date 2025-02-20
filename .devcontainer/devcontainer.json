@@ -33,5 +33,6 @@
                 "python.terminal.promptToCreateVirtualEnv": false
             }
         }
-    }
+    },
+    "postStartCommand": "python /project/unicon/config_builder.py"
 }
