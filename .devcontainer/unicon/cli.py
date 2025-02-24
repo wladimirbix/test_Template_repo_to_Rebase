@@ -27,7 +27,7 @@ def prompt_for_action():
             if platform == "databricks":
                 action = (
                     input(
-                        "Choose action (create_profile, update_profile, delete_profile, list_profiles, set__profile) or type 'back' to go back: "
+                        "Choose action (create_profile, update_profile, delete_profile, list_profiles, set_default_profile) or type 'back' to go back: "
                     )
                     .strip()
                     .lower()

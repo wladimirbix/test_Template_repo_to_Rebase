@@ -5,7 +5,7 @@ from typing import Dict
 
 def get_config_file_path(profile_type: str) -> str:
     """Returns the path to the profile configuration file."""
-    config_dir = "config"  # Save profiles in a central config directory
+    config_dir = ".devcontainer/unicon/config"  # Save profiles in a central config directory
     os.makedirs(config_dir, exist_ok=True)
     return os.path.join(config_dir, f"{profile_type}_profiles.json")
 
