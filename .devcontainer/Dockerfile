@@ -20,5 +20,3 @@ COPY ./ .
 # Add alias for 'unicon' globally
 RUN echo 'unicon() { python3 "$(find /workspaces -maxdepth 4 -type f -name cli.py 2>/dev/null)"; }' >> /etc/bash.bashrc
 
-# Ensure alias works in interactive shells
-SHELL ["/bin/bash", "-c"]
