@@ -91,7 +91,3 @@ This repository is a template using the custom Unicon CLI Tool. It provides a fo
 - Zen Mode: `Ctrl + K Z` (Windows/Linux) / `Cmd + K Z` (Mac)
 - Toggle Comment: `Ctrl + /` (Windows/Linux) / `Cmd + /` (Mac)
 
-## Additional Notes
-
-- Keep the README file up to date to inform new users about changes or additional instructions.
-- Ensure that all dependencies required for running the project are documented.
