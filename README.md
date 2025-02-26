@@ -19,7 +19,7 @@ This repository is a template using the custom Unicon CLI Tool. It provides a fo
    Make sure Docker Desktop is installed and running on your computer.
 
 6. Build and open the program in the Docker container  
-   Open Visual Studio Code and press Ctrl + Shift + P to open the command palette. Search for the command "Remote-Containers: Open Folder in Container" and select it.
+   Open Visual Studio Code and press Ctrl + Shift + P to open the command palette. Search for the command "Dev Containers: Rebuild and Reopen in Container" and select it.
 
 7. Create a profile  
    Once the container is built, type `unicon` in the console and follow the instructions to create a profile.
