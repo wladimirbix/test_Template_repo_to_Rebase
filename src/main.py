@@ -11,6 +11,21 @@ fruits = ["apple", "banana", "cherry"]
 # Dictionary
 person = {"name": "John", "age": 30, "city": "New York"}
 
+# tolle sachen
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+
 
 # Funktion
 def greet(name):
