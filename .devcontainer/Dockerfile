@@ -10,7 +10,7 @@ RUN apt-get update -y && \
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 # Copy the requirements.txt 
-COPY .devcontainer/requirements.txt requirements.txt
+COPY requirements.txt requirements.txt
 
 
 # Install dependencies from the requirements.txt

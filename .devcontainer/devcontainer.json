@@ -2,7 +2,7 @@
     "name": "vsc_development_environment_devcontainer",
     "build": {
         "dockerfile": "Dockerfile",
-        "context": ".."
+        "context": "."
     },
     "customizations": {
         "vscode": {
@@ -34,5 +34,7 @@
             }
         }
     },
-    "postStartCommand": "python /project/unicon/config_builder.py"
+    
+    "postStartCommand": "uv venv --python '>=3.11' default_python_venv && . default_python_venv/bin/activate && uv pip install -r .devcontainer/requirements.txt && python /project/unicon/config_builder.py"
+
 }
