@@ -1,0 +1,17 @@
+# custom_requirements.txt Guide:
+#
+# This file is for adding custom dependencies that are specific to your project.
+#
+# How to use:
+# 1. Add any additional dependencies that are not part of the main requirements
+#    (defined in requirements.txt) to this file.
+# 2. You can specify versions for each package, e.g.:
+#    package_name==version
+# 3. Dependencies in this file will be installed along with those from requirements.txt 
+#    during the Docker build process.
+#
+# Example:
+# requests==2.26.0
+# matplotlib
+#
+# You can update this file as needed to reflect any project-specific packages.

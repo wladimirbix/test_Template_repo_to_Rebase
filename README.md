@@ -90,6 +90,21 @@ This repository is a template using the custom Unicon CLI Tool. It provides a fo
 - The `test` folder contains automated tests.
 - The `tmp` folder contains temporary files and cache files.
 
+### Custom Project Dependencies
+
+If you need to install additional Python packages specific to your project, add them to the `src/custom_requirements.txt` file. 
+
+These dependencies will be installed along with the main requirements during the Docker build process. 
+
+#### Example:
+To add a package, simply include it in the `custom_requirements.txt` file, like so:
+
+requests==2.26.0 
+matplotlib>=3.4.0
+pandas
+NumPy
+
+Once added, rebuild the container to install these custom dependencies.
 
 
 ## Useful and Commonly Used VSC Shortcuts

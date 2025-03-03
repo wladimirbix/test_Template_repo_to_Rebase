@@ -2,7 +2,7 @@
     "name": "vsc_development_environment_devcontainer",
     "build": {
         "dockerfile": "Dockerfile",
-        "context": "."
+        "context": ".."
     },
     "customizations": {
         "vscode": {
