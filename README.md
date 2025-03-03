@@ -47,17 +47,9 @@ This repository is a template using the custom Unicon CLI Tool. It provides a fo
       ### Step 6: Open the Cloned Repository
       1. Once the repository is cloned, VS Code will ask if you want to open the cloned repository. Click **Open** to open the repository in VS Code.
 
-      ### Step 7: Install Dependencies (if any)
-      1. If the repository contains dependencies (e.g., a `package.json` for Node.js projects), VS Code may prompt you to install them.
-      2. Open the **Terminal** in VS Code (`Ctrl + ~` or `Cmd + ~` on macOS).
-      3. Run the appropriate installation command, such as:
-         - `npm install` for Node.js projects.
-         - `pip install -r requirements.txt` for Python projects.
-
-      ### Step 8: Verify the Cloning Process
+      ### Step 7: Verify the Cloning Process
       1. Check the **Explorer** pane in VS Code to see if the repository files are listed.
       2. You should now be able to make changes, commit, and push updates to the cloned repository using VS Code's built-in Git features.
-
 
 
         ### Additional Notes:
@@ -84,7 +76,6 @@ This repository is a template using the custom Unicon CLI Tool. It provides a fo
 
 ## Important Notes
 
-- Folders that begin with a dot (.) must not be modified (e.g., .devcontainer, .vscode, .databricks, ...).
 - The `resources` folder contains code templates.
 - The `src` folder is where the user's code goes.
 - The `test` folder contains automated tests.
@@ -92,12 +83,12 @@ This repository is a template using the custom Unicon CLI Tool. It provides a fo
 
 ### Custom Project Dependencies
 
-If you need to install additional Python packages specific to your project, add them to the `src/custom_requirements.txt` file. 
+If you need to install additional Python packages specific to your project, add them to the `.devcontainer/requirements.txt` file. 
 
-These dependencies will be installed along with the main requirements during the Docker build process. 
+These dependencies will be installed during the Docker build process. 
 
 #### Example:
-To add a package, simply include it in the `custom_requirements.txt` file, like so:
+To add a package, that isnt already in the `requirements.txt` simply include it in the file, like so:
 
 requests==2.26.0 
 matplotlib>=3.4.0
