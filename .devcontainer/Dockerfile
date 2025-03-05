@@ -13,8 +13,8 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 COPY requirements.txt requirements.txt
 
 
-# Install dependencies from the requirements.txt
-RUN uv pip install --no-cache --system -r requirements.txt
+# Install dependencies from the requirements.txt in venv
+RUN uv venv --python '>=3.11' default_python_venv && . /default_python_venv/bin/activate && uv pip install -r requirements.txt
 
 
 WORKDIR /project
