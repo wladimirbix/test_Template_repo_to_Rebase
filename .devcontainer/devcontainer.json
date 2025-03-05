@@ -35,6 +35,6 @@
         }
     },
     
-    "postStartCommand": ". /default_python_venv/bin/activate && python /project/unicon/config_builder.py"
+    "postStartCommand": "python /project/unicon/config_builder.py"
 
 }

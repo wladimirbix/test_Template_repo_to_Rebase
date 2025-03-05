@@ -14,8 +14,12 @@ COPY requirements.txt requirements.txt
 
 
 # Install dependencies from the requirements.txt in venv
-RUN uv venv --python '>=3.11' default_python_venv && . /default_python_venv/bin/activate && uv pip install -r requirements.txt
+RUN uv venv --python '>=3.11' /default_python_venv && \
+    . /default_python_venv/bin/activate && \
+    uv pip install -r requirements.txt
 
+# Ensure virtual environment is used by default
+ENV PATH="/default_python_venv/bin:$PATH"
 
 WORKDIR /project
 
