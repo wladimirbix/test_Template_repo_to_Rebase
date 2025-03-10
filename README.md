@@ -73,8 +73,73 @@ This repository is a template using the custom Unicon CLI Tool. It provides a fo
    Afterwarts click on "Clusters" and select the cluster you want to use.
    Then select "venv" and click on the "default_python_venv" or select a custom one.
 
-9. Incorporate changes from the template  
-   To incorporate future changes from the template, use the `git rebase` command. Do **not** use the `git commit` command since that will overwrite your code.
+
+## Incorporate Changes from the Template
+
+   If you want to update your project with the latest changes from the template repository, follow these steps. This ensures that your project remains up to date while keeping your modifications intact.
+
+   ### Step 1: Add the Template Repository as a Remote (If Not Already Done)
+   If you haven't already added the template as a remote ("template" beeing the name), add it by running:
+   ```
+   git remote add template https://github.com/wladimirbix/VSC-Development-Environment
+   ```
+   Verify that the remote has been added:
+   ```
+   git remote -v
+   ```
+
+   ### Step 2: Fetch the Latest Changes from the Template
+   Pull the latest changes from the template repository:
+   ```
+   git fetch template
+   ```
+   This will download all updates from the template but won't apply them yet.
+
+   ### Step 3: Compare the Changes Before Applying
+   Before applying the changes, you can check the differences between your branch and the template:
+   ```
+   git diff main template/main
+   ```
+
+   ### Step 4: Rebase Your Code on Top of the Template
+   To apply the template updates while preserving your own changes:
+   ```
+   git rebase template/main
+   ```
+   This will attempt to apply your changes on top of the latest template updates.
+
+   ### Step 5: Resolving Merge Conflicts in VS Code
+   If there are conflicts, VS Code will highlight them automatically. Follow these steps to resolve them:
+   1. Open VS Code and check the Source Control (Git) panel (`Ctrl + Shift + G`).
+   2. Look for files marked with `conflict`.
+   3. Open a conflicted file; VS Code will show options like:
+      - Accept Current Change: Keeps your version.
+      - Accept Incoming Change: Uses the template's version.
+      - Accept Both Changes: Merges both versions.
+   4. Manually edit the file if needed and remove conflict markers (`<<<<<<<`, `=======`, `>>>>>>>`).
+   5. After resolving all conflicts, stage the changes:
+      ```
+      git add .
+      ```
+   6. Continue the rebase:
+      ```
+      git rebase --continue
+      ```
+
+   If you want to cancel the rebase at any point:
+   ```
+   git rebase --abort
+   ```
+
+   ### Step 6: Push the Updated Code
+   Once the rebase is complete, push your updated branch:
+   ```
+   git push origin main --force
+   ```
+   **Warning:** This will overwrite the remote branch with the rebased version.
+
+   Now your project includes the latest updates from the template while keeping your own changes.
+
 
 ## Important Notes
 
