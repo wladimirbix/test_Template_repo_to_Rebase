@@ -1,7 +1,8 @@
 ruff
 pytest
-databricks-connect
-pandas
 dbt-core
 dbt-databricks
 pip
+Matplotlib
+Seaborn
+NumPy
